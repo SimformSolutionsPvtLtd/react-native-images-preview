@@ -12,6 +12,8 @@ const imageModalStyle = (x: number, y: number) =>
       position: 'absolute',
       top: y,
       left: x,
+      height: '100%',
+      width: '100%',
     },
     activityIndicatorStyle: {
       position: 'absolute',

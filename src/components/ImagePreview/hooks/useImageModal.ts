@@ -4,7 +4,6 @@ import { Gesture } from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
   interpolateColor,
-  measure,
   runOnJS,
   useAnimatedRef,
   useAnimatedStyle,
@@ -23,17 +22,14 @@ const useImageModal = (
   const animatedImageRef = useAnimatedRef<Animated.Image>();
   const [loading, setLoading] = useState<boolean>(false);
 
-  const dropOffSet = useSharedValue(0);
   const offset = useSharedValue(0);
   const colorOffset = useSharedValue(0);
   const scale = useSharedValue(1);
-  const startY = useSharedValue(0);
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
-  const imageSize = useSharedValue({
-    height: modalConfig.height,
-    width: modalConfig.width,
-  });
+  const saveScale = useSharedValue(1);
+  const oldTranslateX = useSharedValue(0);
+  const oldTranslateY = useSharedValue(0);
 
   offset.value = withTiming(1);
   colorOffset.value = withTiming(1);
@@ -51,25 +47,108 @@ const useImageModal = (
     });
   };
 
-  const imageAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      height: interpolate(
-        offset.value,
-        [0, 1],
-        [modalConfig.height, WINDOW_HEIGHT]
-      ),
-      width: interpolate(
-        offset.value,
-        [0, 1],
-        [modalConfig.width, WINDOW_WIDTH]
-      ),
-      top: interpolate(offset.value, [0, 1], [modalConfig.y, 0]),
-      left: interpolate(offset.value, [0, 1], [modalConfig.x, 0]),
-    };
-  });
+  const updateTranslate = (
+    newTraslateX: number,
+    newTraslateY: number,
+    newScale: number
+  ) => {
+    'worklet';
+    const maxTraslateX =
+      ((WINDOW_WIDTH / 2) * newScale - WINDOW_WIDTH / 2) / newScale;
+    const minTraslateX = -maxTraslateX;
+
+    const maxTraslateY =
+      ((WINDOW_HEIGHT / 2) * newScale - WINDOW_HEIGHT / 2) / newScale;
+    const minTraslateY = -maxTraslateY;
+
+    if (newTraslateX > maxTraslateX) {
+      translateX.value = maxTraslateX;
+    } else if (newTraslateX < minTraslateX) {
+      translateX.value = minTraslateX;
+    } else {
+      translateX.value = newTraslateX;
+    }
+
+    if (newTraslateY > maxTraslateY) {
+      translateY.value = maxTraslateY;
+    } else if (newTraslateY < minTraslateY) {
+      translateY.value = minTraslateY;
+    } else {
+      translateY.value = newTraslateY;
+    }
+  };
+
+  const panGestureEvent = Gesture.Pan()
+    .onChange(e => {
+      if (scale.value > 1) {
+        const newTraslateX = e.translationX + oldTranslateX.value;
+        const newTraslateY = e.translationY + oldTranslateY.value;
+
+        updateTranslate(newTraslateX, newTraslateY, scale.value);
+      } else {
+        colorOffset.value -= Constants.colorOpacityThreshold;
+        translateY.value = e.translationY + oldTranslateY.value;
+      }
+    })
+    .onEnd(() => {
+      if (scale.value === 1) {
+        colorOffset.value = withTiming(0);
+        offset.value = withTiming(0, {}, () => {
+          runOnJS(setModalConfig)({
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            visible: false,
+          });
+        });
+      }
+      oldTranslateX.value = translateX.value;
+      oldTranslateY.value = translateY.value;
+    });
+
+  const doubleTapEvent = Gesture.Tap()
+    .numberOfTaps(2)
+    .onEnd(e => {
+      if (scale.value !== 1) {
+        scale.value = withTiming(1);
+        translateY.value = withTiming(0);
+        translateX.value = withTiming(0);
+        saveScale.value = withTiming(1);
+        oldTranslateX.value = withTiming(0);
+        oldTranslateY.value = withTiming(0);
+      } else {
+        scale.value = withTiming(2);
+        saveScale.value = 2;
+        translateX.value = withTiming(((WINDOW_WIDTH / 2 - e.x) * 1) / 2);
+        translateY.value = withTiming(((WINDOW_HEIGHT / 2 - e.y) * 1) / 2);
+        oldTranslateX.value = ((WINDOW_WIDTH / 2 - e.x) * 1) / 2;
+        oldTranslateY.value = ((WINDOW_HEIGHT / 2 - e.y) * 1) / 2;
+      }
+    });
+
+  const pinchGestureEvent = Gesture.Pinch()
+    .onChange(e => {
+      const updatedScale = saveScale.value * e.scale;
+      if (updatedScale < 1) {
+        scale.value = 1;
+      } else {
+        scale.value = updatedScale;
+        const newTraslateX = oldTranslateX.value;
+        const newTraslateY = oldTranslateY.value;
+        updateTranslate(newTraslateX, newTraslateY, updatedScale);
+      }
+    })
+    .onEnd(() => {
+      saveScale.value = scale.value;
+      oldTranslateX.value = translateX.value;
+      oldTranslateY.value = translateY.value;
+    });
 
   const animatedImageStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
     top: translateY.value,
+    left: translateX.value,
   }));
 
   const modalAnimatedStyle = useAnimatedStyle(() => {
@@ -82,52 +161,23 @@ const useImageModal = (
     };
   });
 
-  const panGestureEvent = Gesture.Pan()
-    .onChange(e => {
-      scale.value -= Constants.scaleThreshold;
-      colorOffset.value -= Constants.colorOpacityThreshold;
-      translateY.value = e.translationY + startY.value;
-    })
-    .onEnd(() => {
-      const measured = measure(animatedImageRef);
-      const { width, height, x } = measured;
-      if (measured !== null) {
-        imageSize.value = {
-          height: height,
-          width: width,
-        };
-        translateX.value = x;
-        dropOffSet.value = withTiming(1, {}, () => {
-          runOnJS(setModalConfig)({
-            x: 0,
-            height: 0,
-            width: 0,
-            y: 0,
-            visible: false,
-          });
-        });
-        colorOffset.value = withTiming(0);
-      }
-      startY.value = translateY.value;
-    });
-
-  const dropDownStyle = useAnimatedStyle(() => {
+  const imageAnimatedStyle = useAnimatedStyle(() => {
     return {
-      top: interpolate(dropOffSet.value, [0, 1], [startY.value, modalConfig.y]),
-      left: interpolate(
-        dropOffSet.value,
-        [0, 1],
-        [translateX.value, modalConfig.x]
-      ),
       height: interpolate(
-        dropOffSet.value,
+        offset.value,
         [0, 1],
-        [imageSize.value.height, modalConfig.height]
+        [modalConfig.height, WINDOW_HEIGHT]
       ),
       width: interpolate(
-        dropOffSet.value,
+        offset.value,
         [0, 1],
-        [imageSize.value.width, modalConfig.width]
+        [modalConfig.width, WINDOW_WIDTH]
+      ),
+      top: interpolate(offset.value, [0, 1], [modalConfig.y, translateY.value]),
+      left: interpolate(
+        offset.value,
+        [0, 1],
+        [modalConfig.x, translateX.value]
       ),
     };
   });
@@ -142,13 +192,14 @@ const useImageModal = (
     loading,
     setLoading,
     onPressClose,
-    dropDownStyle,
-    panGestureEvent,
     animatedImageRef,
     imageAnimatedStyle,
     modalAnimatedStyle,
     animatedImageStyle,
     headerOpacityAnimation,
+    panGestureEvent,
+    pinchGestureEvent,
+    doubleTapEvent,
   };
 };
 
