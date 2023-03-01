@@ -1,8 +1,17 @@
 import React from 'react';
-import { Button } from 'react-native-images-preview';
+import { Image, View } from 'react-native';
+import { ImagePreview } from '../../src';
+import { images } from './assets';
+import { applicationStyle } from './theme';
 
 const App = () => {
-  return <Button text="Example" />;
+  return (
+    <View style={applicationStyle.screen}>
+      <ImagePreview>
+        <Image source={images.forest} style={applicationStyle.imageStyle} />
+      </ImagePreview>
+    </View>
+  );
 };
 
 export default App;
