@@ -11,10 +11,10 @@ import Header from './Header';
 import imageModalStyle from './styles/ImageModalStyle';
 
 const ImageModal = ({
-  children,
   setModalConfig,
   modalConfig,
   customHeader,
+  imageSource,
 }: ImageModalProps) => {
   const styles = imageModalStyle(modalConfig.x, modalConfig.y);
   const {
@@ -27,6 +27,7 @@ const ImageModal = ({
     animatedImageStyle,
     loading,
     setLoading,
+    headerOpacityAnimation,
   } = useImageModal(modalConfig, setModalConfig);
   return (
     <Modal visible={modalConfig.visible} transparent>
@@ -34,13 +35,15 @@ const ImageModal = ({
         <GestureDetector gesture={panGestureEvent}>
           <Animated.View style={[styles.modalContainer, modalAnimatedStyle]}>
             <SafeAreaView style={styles.modalContainer}>
-              <Header {...{ customHeader, onPressClose }} />
+              <Header
+                {...{ customHeader, onPressClose, headerOpacityAnimation }}
+              />
               {loading && (
                 <ActivityIndicator style={styles.activityIndicatorStyle} />
               )}
               <Animated.Image
                 ref={animatedImageRef}
-                source={children.props.source}
+                source={imageSource}
                 resizeMode={'contain'}
                 style={[
                   imageAnimatedStyle,

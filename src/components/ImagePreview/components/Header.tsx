@@ -1,12 +1,17 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { Strings } from '../../../constants';
 import type { HeaderProps } from '../types';
 import styles from './styles/HeaderStyle';
 
-const Header = ({ customHeader, onPressClose }: HeaderProps) => {
+const Header = ({
+  customHeader,
+  onPressClose,
+  headerOpacityAnimation,
+}: HeaderProps) => {
   return (
-    <View style={styles.closeButtonParent}>
+    <Animated.View style={[styles.closeButtonParent, headerOpacityAnimation]}>
       {customHeader ? (
         customHeader(onPressClose)
       ) : (
@@ -18,7 +23,7 @@ const Header = ({ customHeader, onPressClose }: HeaderProps) => {
           <Text style={styles.closeText}>{Strings.close}</Text>
         </TouchableOpacity>
       )}
-    </View>
+    </Animated.View>
   );
 };
 
