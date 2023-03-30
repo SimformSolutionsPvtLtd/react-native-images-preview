@@ -1,6 +1,11 @@
 import type React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
-import type { ImageSourcePropType, ImageStyle, StyleProp } from 'react-native';
+import type {
+  ImageProps,
+  ImageSourcePropType,
+  ImageStyle,
+  StyleProp,
+} from 'react-native';
 
 export type ModalConfigType = {
   x: number;
@@ -17,10 +22,14 @@ export type HeaderOpacityAnimationType = {
 export type ImagePreviewProps = {
   imageSource: ImageSourcePropType;
   imageStyle: StyleProp<ImageStyle>;
+  imageProps?: Omit<ImageProps, 'source' | 'defaultSource' | 'style'>;
   customHeader?: (close: () => void) => React.ReactElement;
 };
 
-export type ImageModalProps = Omit<ImagePreviewProps, 'imageStyle'> & {
+export type ImageModalProps = Omit<
+  ImagePreviewProps,
+  'imageStyle' | 'imageProps'
+> & {
   setModalConfig: Dispatch<SetStateAction<ModalConfigType>>;
   modalConfig: ModalConfigType;
 };

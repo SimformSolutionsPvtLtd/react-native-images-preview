@@ -9,6 +9,7 @@ const ImagePreview = ({
   imageSource,
   imageStyle,
   customHeader,
+  imageProps,
 }: ImagePreviewProps) => {
   const {
     modalConfig,
@@ -46,6 +47,7 @@ const ImagePreview = ({
                 onLoadEnd={() => {
                   setLoading(false);
                 }}
+                {...imageProps}
               />
               {loading && (
                 <ActivityIndicator style={styles.activityIndicatorStyle} />
