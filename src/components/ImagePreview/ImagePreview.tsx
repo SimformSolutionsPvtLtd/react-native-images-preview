@@ -5,7 +5,7 @@ import { useImagePreview } from './hooks';
 import styles from './styles';
 import type { ImagePreviewProps } from './types';
 
-const ImagePreview = ({ children }: ImagePreviewProps) => {
+const ImagePreview = ({ children, customHeader }: ImagePreviewProps) => {
   const { modalConfig, onPressImage, setModalConfig, viewRef } =
     useImagePreview();
 
@@ -24,7 +24,10 @@ const ImagePreview = ({ children }: ImagePreviewProps) => {
         </TouchableOpacity>
       </View>
       {modalConfig.visible && (
-        <ImageModal modalConfig={modalConfig} setModalConfig={setModalConfig}>
+        <ImageModal
+          modalConfig={modalConfig}
+          setModalConfig={setModalConfig}
+          customHeader={customHeader}>
           {children}
         </ImageModal>
       )}

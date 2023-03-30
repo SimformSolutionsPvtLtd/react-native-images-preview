@@ -6,13 +6,16 @@ export type ModalConfigType = {
   y: number;
   visible: boolean;
 };
-
-export type ImageModalProps = {
+export type ImagePreviewProps = {
   children: React.ReactElement;
+  customHeader?: (close: () => void) => React.ReactElement;
+};
+
+export type ImageModalProps = ImagePreviewProps & {
   setModalConfig: Dispatch<SetStateAction<ModalConfigType>>;
   modalConfig: ModalConfigType;
 };
 
-export type ImagePreviewProps = {
-  children: React.ReactElement;
+export type HeaderProps = Pick<ImagePreviewProps, 'customHeader'> & {
+  onPressClose: () => void;
 };
