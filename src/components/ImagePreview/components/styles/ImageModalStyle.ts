@@ -1,13 +1,18 @@
 import { StyleSheet } from 'react-native';
 
-const styles = StyleSheet.create({
-  modalContainer: {
-    flex: 1,
-  },
+const imageModalStyle = (x: number, y: number) =>
+  StyleSheet.create({
+    modalContainer: {
+      flex: 1,
+    },
+    gestureContainer: {
+      flex: 1,
+    },
+    imageStyle: {
+      position: 'absolute',
+      top: y,
+      left: x,
+    },
+  });
 
-  imageStyle: {
-    position: 'absolute',
-  },
-});
-
-export default styles;
+export default imageModalStyle;
