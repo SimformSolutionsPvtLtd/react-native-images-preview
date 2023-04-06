@@ -11,6 +11,7 @@ const useImagePreview = () => {
     visible: false,
   });
   const imageRef = useRef<Image>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onPressImage = async () => {
     imageRef.current?.measure((_ox, _oy, width, height, px, py) => {
@@ -29,6 +30,8 @@ const useImagePreview = () => {
     setModalConfig,
     onPressImage,
     imageRef,
+    loading,
+    setLoading,
   };
 };
 

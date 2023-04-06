@@ -5,9 +5,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  imageStyle: {
-    height: '100%',
-    width: '100%',
+  imageParent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  activityIndicatorStyle: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
 });
 

@@ -13,6 +13,13 @@ const imageModalStyle = (x: number, y: number) =>
       top: y,
       left: x,
     },
+    activityIndicatorStyle: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      bottom: 0,
+      right: 0,
+    },
   });
 
 export default imageModalStyle;

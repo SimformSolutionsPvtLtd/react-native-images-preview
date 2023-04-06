@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'react-native';
+import { ActivityIndicator, Modal, SafeAreaView } from 'react-native';
 import {
   GestureDetector,
   GestureHandlerRootView,
@@ -21,32 +21,42 @@ const ImageModal = ({
     imageAnimatedStyle,
     onPressClose,
     modalAnimatedStyle,
-    AnimatedSafeAreaView,
     animatedImageRef,
     panGestureEvent,
     dropDownStyle,
     animatedImageStyle,
+    loading,
+    setLoading,
   } = useImageModal(modalConfig, setModalConfig);
-
   return (
     <Modal visible={modalConfig.visible} transparent>
       <GestureHandlerRootView style={styles.gestureContainer}>
         <GestureDetector gesture={panGestureEvent}>
-          <AnimatedSafeAreaView
-            style={[styles.modalContainer, modalAnimatedStyle]}>
-            <Header {...{ customHeader, onPressClose }} />
-            <Animated.Image
-              ref={animatedImageRef}
-              source={children.props.source}
-              resizeMode={'contain'}
-              style={[
-                imageAnimatedStyle,
-                dropDownStyle,
-                animatedImageStyle,
-                styles.imageStyle,
-              ]}
-            />
-          </AnimatedSafeAreaView>
+          <Animated.View style={[styles.modalContainer, modalAnimatedStyle]}>
+            <SafeAreaView style={styles.modalContainer}>
+              <Header {...{ customHeader, onPressClose }} />
+              {loading && (
+                <ActivityIndicator style={styles.activityIndicatorStyle} />
+              )}
+              <Animated.Image
+                ref={animatedImageRef}
+                source={children.props.source}
+                resizeMode={'contain'}
+                style={[
+                  imageAnimatedStyle,
+                  dropDownStyle,
+                  animatedImageStyle,
+                  styles.imageStyle,
+                ]}
+                onLoadStart={() => {
+                  setLoading(true);
+                }}
+                onLoadEnd={() => {
+                  setLoading(false);
+                }}
+              />
+            </SafeAreaView>
+          </Animated.View>
         </GestureDetector>
       </GestureHandlerRootView>
     </Modal>
