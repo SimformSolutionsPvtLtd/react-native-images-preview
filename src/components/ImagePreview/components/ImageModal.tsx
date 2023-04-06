@@ -1,15 +1,16 @@
 import React from 'react';
-import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { Modal } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { Strings } from '../../../constants';
 import { useImageModal } from '../hooks';
 import type { ImageModalProps } from '../types';
+import Header from './Header';
 import styles from './styles/ImageModalStyle';
 
 const ImageModal = ({
   children,
   setModalConfig,
   modalConfig,
+  customHeader,
 }: ImageModalProps) => {
   const {
     imageAnimatedStyle,
@@ -21,15 +22,7 @@ const ImageModal = ({
   return (
     <Modal visible={modalConfig.visible}>
       <AnimatedSafeAreaView style={[styles.modalContainer, modalAnimatedStyle]}>
-        <View style={styles.closeButtonParent}>
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={() => {
-              onPressClose();
-            }}>
-            <Text style={styles.closeText}>{Strings.close}</Text>
-          </TouchableOpacity>
-        </View>
+        <Header customHeader={customHeader} onPressClose={onPressClose} />
         <Animated.Image
           source={children.props.source}
           resizeMode={'contain'}
