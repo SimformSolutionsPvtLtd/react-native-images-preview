@@ -2,34 +2,34 @@ import React from 'react';
 import { Image, TouchableOpacity, View } from 'react-native';
 import { ImageModal } from './components';
 import { useImagePreview } from './hooks';
-import styles from './styles';
 import type { ImagePreviewProps } from './types';
 
 const ImagePreview = ({ children, customHeader }: ImagePreviewProps) => {
-  const { modalConfig, onPressImage, setModalConfig, viewRef } =
+  const { modalConfig, onPressImage, setModalConfig, imageRef } =
     useImagePreview();
 
   return (
     <>
-      <View
-        style={children.props.style}
-        ref={viewRef}
-        renderToHardwareTextureAndroid={true}>
-        <TouchableOpacity onPress={onPressImage}>
-          <Image
-            source={children.props.source}
-            style={styles.imageStyle}
-            resizeMode={'contain'}
-          />
-        </TouchableOpacity>
-      </View>
-      {modalConfig.visible && (
-        <ImageModal
-          modalConfig={modalConfig}
-          setModalConfig={setModalConfig}
-          customHeader={customHeader}>
-          {children}
-        </ImageModal>
+      {children && (
+        <>
+          {modalConfig.visible ? (
+            <ImageModal
+              modalConfig={modalConfig}
+              setModalConfig={setModalConfig}
+              customHeader={customHeader}>
+              {children}
+            </ImageModal>
+          ) : (
+            <TouchableOpacity onPress={onPressImage}>
+              <Image
+                ref={imageRef}
+                source={children.props.source}
+                style={children.props.style}
+              />
+            </TouchableOpacity>
+          )}
+          {modalConfig.visible && <View style={children.props.style} />}
+        </>
       )}
     </>
   );

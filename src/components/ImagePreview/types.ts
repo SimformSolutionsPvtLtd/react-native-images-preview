@@ -4,6 +4,8 @@ import type { Dispatch, SetStateAction } from 'react';
 export type ModalConfigType = {
   x: number;
   y: number;
+  height: number;
+  width: number;
   visible: boolean;
 };
 export type ImagePreviewProps = {
