@@ -1,5 +1,5 @@
-import type { Dispatch, SetStateAction } from 'react';
-import { SafeAreaView, useWindowDimensions } from 'react-native';
+import { Dispatch, SetStateAction, useState } from 'react';
+import { useWindowDimensions } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import Animated, {
   interpolate,
@@ -19,9 +19,9 @@ const useImageModal = (
   modalConfig: ModalConfigType,
   setModalConfig: Dispatch<SetStateAction<ModalConfigType>>
 ) => {
-  const AnimatedSafeAreaView = Animated.createAnimatedComponent(SafeAreaView);
   const { height: WINDOW_HEIGHT, width: WINDOW_WIDTH } = useWindowDimensions();
   const animatedImageRef = useAnimatedRef<Animated.Image>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const dropOffSet = useSharedValue(0);
   const offset = useSharedValue(0);
@@ -67,6 +67,7 @@ const useImageModal = (
       left: interpolate(offset.value, [0, 1], [modalConfig.x, 0]),
     };
   });
+
   const animatedImageStyle = useAnimatedStyle(() => ({
     top: translateY.value,
   }));
@@ -132,13 +133,14 @@ const useImageModal = (
   });
 
   return {
-    imageAnimatedStyle,
+    loading,
+    setLoading,
     onPressClose,
-    modalAnimatedStyle,
-    AnimatedSafeAreaView,
-    animatedImageRef,
     dropDownStyle,
     panGestureEvent,
+    animatedImageRef,
+    imageAnimatedStyle,
+    modalAnimatedStyle,
     animatedImageStyle,
   };
 };
