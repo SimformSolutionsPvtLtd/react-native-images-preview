@@ -132,6 +132,12 @@ const useImageModal = (
     };
   });
 
+  const headerOpacityAnimation = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(colorOffset.value, [0, 1], [0, 1]),
+    };
+  });
+
   return {
     loading,
     setLoading,
@@ -142,6 +148,7 @@ const useImageModal = (
     imageAnimatedStyle,
     modalAnimatedStyle,
     animatedImageStyle,
+    headerOpacityAnimation,
   };
 };
 

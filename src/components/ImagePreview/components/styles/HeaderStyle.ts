@@ -14,7 +14,8 @@ const styles = StyleSheet.create({
     width: horizontalScale(80),
     marginTop: verticalScale(5),
     marginRight: horizontalScale(5),
-    borderRadius: moderateScale(10),
+    borderRadius: moderateScale(20),
+    backgroundColor: Colors.black,
   },
   closeButtonParent: {
     width,
