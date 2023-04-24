@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, Modal, SafeAreaView } from 'react-native';
 import {
+  Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from 'react-native-gesture-handler';
@@ -22,17 +23,22 @@ const ImageModal = ({
     onPressClose,
     modalAnimatedStyle,
     animatedImageRef,
-    panGestureEvent,
-    dropDownStyle,
     animatedImageStyle,
     loading,
     setLoading,
     headerOpacityAnimation,
+    doubleTapEvent,
+    panGestureEvent,
+    pinchGestureEvent,
   } = useImageModal(modalConfig, setModalConfig);
   return (
     <Modal visible={modalConfig.visible} transparent>
       <GestureHandlerRootView style={styles.gestureContainer}>
-        <GestureDetector gesture={panGestureEvent}>
+        <GestureDetector
+          gesture={Gesture.Race(
+            doubleTapEvent,
+            Gesture.Simultaneous(panGestureEvent, pinchGestureEvent)
+          )}>
           <Animated.View style={[styles.modalContainer, modalAnimatedStyle]}>
             <SafeAreaView style={styles.modalContainer}>
               <Header
@@ -47,7 +53,6 @@ const ImageModal = ({
                 resizeMode={'contain'}
                 style={[
                   imageAnimatedStyle,
-                  dropDownStyle,
                   animatedImageStyle,
                   styles.imageStyle,
                 ]}
