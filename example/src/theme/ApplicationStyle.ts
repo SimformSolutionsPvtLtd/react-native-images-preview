@@ -20,9 +20,6 @@ const applicationStyle = StyleSheet.create({
   },
   scrollViewStyle: {
     marginHorizontal: horizontalScale(10),
-  },
-  container: {
-    flex: 1,
     backgroundColor: Colors.white,
   },
   horizontalView: {

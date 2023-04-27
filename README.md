@@ -62,6 +62,14 @@ $ yarn example android   // For Android
 
 ![alt Default](./assets/default.gif)
 
+| Simple         | SwipeDown Close |
+|----------------|-----------------|
+|![alt Default](./assets/simple.gif)|![alt Default](./assets/swipeDownClose.gif)|
+
+| DoubleTap Zoom | Pinch Zoom      |
+|----------------|-----------------|
+|![alt Default](./assets/doubleTap.gif)|![alt Default](./assets/pinchZoom.gif)|
+
 ## Usage
 
 ```jsx
@@ -104,6 +112,10 @@ const styles = StyleSheet.create({
 | imageSource  |    -    |            ImageSourcePropType            |                              Source of image                               |
 |  imageStyle  |    -    |           `StyleProp<ImageStyle>`           |                              Styling of image                              |
 |  imageProps  |    -    |                ImageProps                 | Provide <a href="https://reactnative.dev/docs/image#props">image</a> props |
+| doubleTapZoomEnabled |    true    | boolean |                      enable/disable double tap to zoom                     |
+| pinchZoomEnabled |    true    | boolean |                      enable/disable pinch to zoom                     |
+| swipeDownCloseEnabled |    true    | boolean |                      enable/disable swipe down to close modal                     |
+
 
 ---
 

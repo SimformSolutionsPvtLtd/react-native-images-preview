@@ -16,6 +16,9 @@ const ImageModal = ({
   modalConfig,
   customHeader,
   imageSource,
+  doubleTapZoomEnabled,
+  pinchZoomEnabled,
+  swipeDownCloseEnabled,
 }: ImageModalProps) => {
   const styles = imageModalStyle(modalConfig.x, modalConfig.y);
   const {
@@ -30,7 +33,13 @@ const ImageModal = ({
     doubleTapEvent,
     panGestureEvent,
     pinchGestureEvent,
-  } = useImageModal(modalConfig, setModalConfig);
+  } = useImageModal(
+    modalConfig,
+    setModalConfig,
+    pinchZoomEnabled,
+    doubleTapZoomEnabled,
+    swipeDownCloseEnabled
+  );
   return (
     <Modal visible={modalConfig.visible} transparent>
       <GestureHandlerRootView style={styles.gestureContainer}>
