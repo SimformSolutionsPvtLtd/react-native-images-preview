@@ -1,4 +1,2 @@
-import CustomHeader from './CustomHeader';
-import ModalHeader from './ModalHeader';
-
-export { CustomHeader, ModalHeader };
+export { default as CustomHeader } from './CustomHeader';
+export { default as ModalHeader } from './ModalHeader';

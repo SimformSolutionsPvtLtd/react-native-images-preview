@@ -23,6 +23,9 @@ export type ImagePreviewProps = {
   imageSource: ImageSourcePropType;
   imageStyle: StyleProp<ImageStyle>;
   imageProps?: Omit<ImageProps, 'source' | 'defaultSource' | 'style'>;
+  doubleTapZoomEnabled?: boolean;
+  pinchZoomEnabled?: boolean;
+  swipeDownCloseEnabled?: boolean;
   customHeader?: (close: () => void) => React.ReactElement;
 };
 

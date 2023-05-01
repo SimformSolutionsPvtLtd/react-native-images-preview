@@ -10,13 +10,16 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
-import { Constants } from '../../../constants';
+import { StaticValues } from '../../../constants';
 import { Colors } from '../../../theme';
 import type { ModalConfigType } from '../types';
 
 const useImageModal = (
   modalConfig: ModalConfigType,
-  setModalConfig: Dispatch<SetStateAction<ModalConfigType>>
+  setModalConfig: Dispatch<SetStateAction<ModalConfigType>>,
+  pinchZoomEnabled: boolean | undefined,
+  doubleTapZoomEnabled: boolean | undefined,
+  swipeDownCloseEnabled: boolean | undefined
 ) => {
   const { height: WINDOW_HEIGHT, width: WINDOW_WIDTH } = useWindowDimensions();
   const animatedImageRef = useAnimatedRef<Animated.Image>();
@@ -79,19 +82,19 @@ const useImageModal = (
   };
 
   const panGestureEvent = Gesture.Pan()
-    .onChange(e => {
+    .onChange(eventData => {
       if (scale.value > 1) {
-        const newTraslateX = e.translationX + oldTranslateX.value;
-        const newTraslateY = e.translationY + oldTranslateY.value;
+        const newTraslateX = eventData.translationX + oldTranslateX.value;
+        const newTraslateY = eventData.translationY + oldTranslateY.value;
 
         updateTranslate(newTraslateX, newTraslateY, scale.value);
-      } else {
-        colorOffset.value -= Constants.colorOpacityThreshold;
-        translateY.value = e.translationY + oldTranslateY.value;
+      } else if (swipeDownCloseEnabled) {
+        colorOffset.value -= StaticValues.colorOpacityThreshold;
+        translateY.value = eventData.translationY + oldTranslateY.value;
       }
     })
     .onEnd(() => {
-      if (scale.value === 1) {
+      if (scale.value === 1 && swipeDownCloseEnabled) {
         colorOffset.value = withTiming(0);
         offset.value = withTiming(0, {}, () => {
           runOnJS(setModalConfig)({
@@ -109,7 +112,8 @@ const useImageModal = (
 
   const doubleTapEvent = Gesture.Tap()
     .numberOfTaps(2)
-    .onEnd(e => {
+    .enabled(doubleTapZoomEnabled ?? true)
+    .onEnd(eventData => {
       if (scale.value !== 1) {
         scale.value = withTiming(1);
         translateY.value = withTiming(0);
@@ -120,16 +124,21 @@ const useImageModal = (
       } else {
         scale.value = withTiming(2);
         saveScale.value = 2;
-        translateX.value = withTiming(((WINDOW_WIDTH / 2 - e.x) * 1) / 2);
-        translateY.value = withTiming(((WINDOW_HEIGHT / 2 - e.y) * 1) / 2);
-        oldTranslateX.value = ((WINDOW_WIDTH / 2 - e.x) * 1) / 2;
-        oldTranslateY.value = ((WINDOW_HEIGHT / 2 - e.y) * 1) / 2;
+        translateX.value = withTiming(
+          ((WINDOW_WIDTH / 2 - eventData.x) * 1) / 2
+        );
+        translateY.value = withTiming(
+          ((WINDOW_HEIGHT / 2 - eventData.y) * 1) / 2
+        );
+        oldTranslateX.value = ((WINDOW_WIDTH / 2 - eventData.x) * 1) / 2;
+        oldTranslateY.value = ((WINDOW_HEIGHT / 2 - eventData.y) * 1) / 2;
       }
     });
 
   const pinchGestureEvent = Gesture.Pinch()
-    .onChange(e => {
-      const updatedScale = saveScale.value * e.scale;
+    .enabled(pinchZoomEnabled ?? true)
+    .onChange(eventData => {
+      const updatedScale = saveScale.value * eventData.scale;
       if (updatedScale < 1) {
         scale.value = 1;
       } else {

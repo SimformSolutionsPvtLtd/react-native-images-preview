@@ -10,6 +10,9 @@ const ImagePreview = ({
   imageStyle,
   customHeader,
   imageProps,
+  pinchZoomEnabled = true,
+  doubleTapZoomEnabled = true,
+  swipeDownCloseEnabled = true,
 }: ImagePreviewProps) => {
   const {
     modalConfig,
@@ -31,6 +34,9 @@ const ImagePreview = ({
                 setModalConfig,
                 customHeader,
                 imageSource,
+                pinchZoomEnabled,
+                doubleTapZoomEnabled,
+                swipeDownCloseEnabled,
               }}
             />
           ) : (
