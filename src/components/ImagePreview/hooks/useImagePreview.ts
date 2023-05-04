@@ -12,6 +12,7 @@ const useImagePreview = () => {
   });
   const imageRef = useRef<Image>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
 
   const onPressImage = async () => {
     imageRef.current?.measure((_ox, _oy, width, height, px, py) => {
@@ -32,6 +33,8 @@ const useImagePreview = () => {
     imageRef,
     loading,
     setLoading,
+    error,
+    setError,
   };
 };
 
