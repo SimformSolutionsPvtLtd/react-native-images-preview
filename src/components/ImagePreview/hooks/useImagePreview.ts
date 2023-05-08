@@ -14,7 +14,10 @@ const useImagePreview = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
 
-  const onPressImage = async () => {
+  /**
+   * Use to get the position and size of image and set to modalConfig
+   */
+  const onPressImage = () => {
     imageRef.current?.measure((_ox, _oy, width, height, px, py) => {
       setModalConfig({
         x: px,

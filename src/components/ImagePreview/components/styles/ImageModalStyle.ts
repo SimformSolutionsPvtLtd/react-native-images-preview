@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-const imageModalStyle = (x: number, y: number, height: number, width: number) =>
+const styles = (x: number, y: number, height: number, width: number) =>
   StyleSheet.create({
     modalContainer: {
       flex: 1,
@@ -24,4 +24,4 @@ const imageModalStyle = (x: number, y: number, height: number, width: number) =>
     },
   });
 
-export default imageModalStyle;
+export default styles;
