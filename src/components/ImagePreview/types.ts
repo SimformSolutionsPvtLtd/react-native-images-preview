@@ -27,11 +27,12 @@ export type ImagePreviewProps = {
   pinchZoomEnabled?: boolean;
   swipeDownCloseEnabled?: boolean;
   customHeader?: (close: () => void) => React.ReactElement;
+  errorImageSource?: ImageSourcePropType;
 };
 
 export type ImageModalProps = Omit<
   ImagePreviewProps,
-  'imageStyle' | 'imageProps'
+  'imageStyle' | 'imageProps' | 'errorImageSource'
 > & {
   setModalConfig: Dispatch<SetStateAction<ModalConfigType>>;
   modalConfig: ModalConfigType;
@@ -41,3 +42,7 @@ export type HeaderProps = Pick<ImagePreviewProps, 'customHeader'> & {
   onPressClose: () => void;
   headerOpacityAnimation: HeaderOpacityAnimationType;
 };
+
+export type ErrorImageProps = Required<
+  Pick<ImagePreviewProps, 'imageStyle' | 'errorImageSource'>
+>;

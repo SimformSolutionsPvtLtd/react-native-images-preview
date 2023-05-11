@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native';
-import { ImageModal } from './components';
+import { images } from '../../assets';
+import { ErrorImage, ImageModal } from './components';
 import { useImagePreview } from './hooks';
 import styles from './styles';
 import type { ImagePreviewProps } from './types';
@@ -13,6 +14,7 @@ const ImagePreview = ({
   pinchZoomEnabled = true,
   doubleTapZoomEnabled = true,
   swipeDownCloseEnabled = true,
+  errorImageSource = images.errorImage,
 }: ImagePreviewProps) => {
   const {
     modalConfig,
@@ -21,6 +23,8 @@ const ImagePreview = ({
     imageRef,
     loading,
     setLoading,
+    error,
+    setError,
   } = useImagePreview();
 
   return (
@@ -42,19 +46,26 @@ const ImagePreview = ({
           ) : (
             <TouchableOpacity
               onPress={onPressImage}
-              style={[imageStyle, styles.imageParent]}>
+              style={[imageStyle, styles.imageParent]}
+              disabled={error}>
               <Image
                 ref={imageRef}
                 source={imageSource}
                 style={imageStyle}
                 onLoadStart={() => {
                   setLoading(true);
+                  setError(false);
                 }}
                 onLoadEnd={() => {
                   setLoading(false);
                 }}
+                onError={() => {
+                  setLoading(false);
+                  setError(true);
+                }}
                 {...imageProps}
               />
+              {error && <ErrorImage {...{ imageStyle, errorImageSource }} />}
               {loading && (
                 <ActivityIndicator style={styles.activityIndicatorStyle} />
               )}
