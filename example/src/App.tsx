@@ -1,6 +1,6 @@
 import React from 'react';
 import { SafeAreaView, ScrollView, Text, View } from 'react-native';
-import { ImagePreview } from '../../src';
+import { ImagePreview } from 'react-native-images-preview';
 import { images } from './assets';
 import { CustomHeader, ModalHeader } from './components';
 import { imageData, Strings } from './constants';
@@ -32,7 +32,7 @@ const App = () => {
         <Text style={text}>{Strings.dummyText}</Text>
         <View style={horizontalView}>
           <ImagePreview
-            customHeader={onPressClose => (
+            renderHeader={onPressClose => (
               <ModalHeader onPress={onPressClose} />
             )}
             imageSource={{

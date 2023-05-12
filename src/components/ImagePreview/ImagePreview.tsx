@@ -1,7 +1,7 @@
 import React from 'react';
-import { ActivityIndicator, Image, TouchableOpacity, View } from 'react-native';
+import { Image, TouchableOpacity, View } from 'react-native';
 import { images } from '../../assets';
-import { ErrorImage, ImageModal } from './components';
+import { ErrorImage, ImageLoader, ImageModal } from './components';
 import { useImagePreview } from './hooks';
 import styles from './styles';
 import type { ImagePreviewProps } from './types';
@@ -9,12 +9,14 @@ import type { ImagePreviewProps } from './types';
 const ImagePreview = ({
   imageSource,
   imageStyle,
-  customHeader,
+  renderHeader,
   imageProps,
   pinchZoomEnabled = true,
   doubleTapZoomEnabled = true,
   swipeDownCloseEnabled = true,
   errorImageSource = images.errorImage,
+  imageLoaderProps,
+  renderImageLoader,
 }: ImagePreviewProps) => {
   const {
     modalConfig,
@@ -36,7 +38,7 @@ const ImagePreview = ({
               {...{
                 modalConfig,
                 setModalConfig,
-                customHeader,
+                renderHeader,
                 imageSource,
                 pinchZoomEnabled,
                 doubleTapZoomEnabled,
@@ -67,7 +69,7 @@ const ImagePreview = ({
               />
               {error && <ErrorImage {...{ imageStyle, errorImageSource }} />}
               {loading && (
-                <ActivityIndicator style={styles.activityIndicatorStyle} />
+                <ImageLoader {...{ renderImageLoader }} {...imageLoaderProps} />
               )}
             </TouchableOpacity>
           )}

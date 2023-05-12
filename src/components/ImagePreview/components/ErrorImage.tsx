@@ -1,7 +1,7 @@
 import React from 'react';
 import { Image } from 'react-native';
 import type { ErrorImageProps } from '../types';
-import styles from './styles/ErrorImageStyle';
+import { ErrorImageStyle as styles } from './styles';
 
 const ErrorImage = ({ imageStyle, errorImageSource }: ErrorImageProps) => (
   <Image

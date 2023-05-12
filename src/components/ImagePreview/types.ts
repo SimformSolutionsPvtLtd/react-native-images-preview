@@ -1,6 +1,7 @@
 import type React from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import type {
+  ActivityIndicatorProps,
   ImageProps,
   ImageSourcePropType,
   ImageStyle,
@@ -26,9 +27,10 @@ export type ImagePreviewProps = {
   doubleTapZoomEnabled?: boolean;
   pinchZoomEnabled?: boolean;
   swipeDownCloseEnabled?: boolean;
-  customHeader?: (close: () => void) => React.ReactElement;
   errorImageSource?: ImageSourcePropType;
-};
+  renderHeader?: (close: () => void) => React.ReactElement;
+  imageLoaderProps?: ActivityIndicatorProps;
+} & Pick<ImageLoaderProps, 'renderImageLoader'>;
 
 export type ImageModalProps = Omit<
   ImagePreviewProps,
@@ -38,7 +40,7 @@ export type ImageModalProps = Omit<
   modalConfig: ModalConfigType;
 };
 
-export type HeaderProps = Pick<ImagePreviewProps, 'customHeader'> & {
+export type HeaderProps = Pick<ImagePreviewProps, 'renderHeader'> & {
   onPressClose: () => void;
   headerOpacityAnimation: HeaderOpacityAnimationType;
 };
@@ -46,3 +48,14 @@ export type HeaderProps = Pick<ImagePreviewProps, 'customHeader'> & {
 export type ErrorImageProps = Required<
   Pick<ImagePreviewProps, 'imageStyle' | 'errorImageSource'>
 >;
+export type UseImageModalProps = {
+  modalConfig: ModalConfigType;
+  setModalConfig: Dispatch<SetStateAction<ModalConfigType>>;
+  pinchZoomEnabled: boolean | undefined;
+  doubleTapZoomEnabled: boolean | undefined;
+  swipeDownCloseEnabled: boolean | undefined;
+};
+
+export type ImageLoaderProps = ActivityIndicatorProps & {
+  renderImageLoader?: () => React.ReactElement;
+};

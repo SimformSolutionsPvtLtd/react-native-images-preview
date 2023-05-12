@@ -2,35 +2,55 @@
 
 ## [![npm version](https://img.shields.io/badge/npm%20package-0.0.1-orange)](https://www.npmjs.org/package/react-native-images-preview) [![Android](https://img.shields.io/badge/Platform-Android-green?logo=android)](https://www.android.com) [![iOS](https://img.shields.io/badge/Platform-iOS-green?logo=apple)](https://developer.apple.com/ios) [![MIT](https://img.shields.io/badge/License-MIT-green)](https://opensource.org/licenses/MIT)
 
-React Native component for previewing image in full screen, with zooming enabled through double tap and pinch gestures.
+Introducing an image preview built with pure JavaScript and leveraging React Native Reanimated and GesturesHandler, enabling full-screen image previewing and zooming via double-tap and pinch gestures for effortless integration into applications.
 
----
+Our library is designed to be highly customizable, allowing developers to tailor it to their specific needs, such as changing the colors, styles, and other visual elements. Whether you're an Android or iOS user, our library is compatible with both platform, guaranteeing optimal performance.
 
-## Installation
+## 🎬 Preview
 
-##### 1. Install animation catalog
+|               Simple                |               SwipeDown Close               |
+| :---------------------------------: | :-----------------------------------------: |
+| ![alt Default](./assets/simple.gif) | ![alt Default](./assets/swipeDownClose.gif) |
 
-```bash
-$ npm install react-native-images-preview
-# --- or ---
-$ yarn add react-native-images-preview
+|             DoubleTap Zoom             |               Pinch Zoom               |
+| :------------------------------------: | :------------------------------------: |
+| ![alt Default](./assets/doubleTap.gif) | ![alt Default](./assets/pinchZoom.gif) |
+
+## Quick Access
+
+- [Installation](#installation)
+- [Usage and Examples](#usage)
+- [Properties](#properties)
+- [Example Code](#example)
+- [License](#license)
+
+## Getting Started 🔧
+
+Here's how to get started with react-native-images-preview in your React Native project:
+
+### Installation
+
+#### 1. Install the package
+
+Using `npm`:
+
+```sh
+npm install react-native-images-preview react-native-reanimated react-native-gesture-handler
 ```
 
-##### 2. Install required dependencies
+Using `yarn`:
 
-```bash
-$ npm install react-native-reanimated react-native-gesture-handler
-# --- or ---
-$ yarn add react-native-reanimated react-native-gesture-handler
+```sh
+yarn add react-native-images-preview react-native-reanimated react-native-gesture-handler
 ```
 
-##### 3. Install cocoapods in the ios project
+##### 2. Install cocoapods in the ios project
 
-```bash
+```sh
 cd ios && pod install
 ```
 
-> Note: Make sure to add Reanimated's babel plugin to your `babel.config.js`
+> Note: Make sure to add Reanimated's babel plugin to your`babel.config.js`
 
 ```sh
 module.exports = {
@@ -42,39 +62,19 @@ module.exports = {
   };
 ```
 
-> Note: For React Native 0.61 or greater, add react-native-gesture-handler in index.js file:
+> Note: For React Native 0.61 or greater, add react-native-gesture-handler in index.js file.
 
 ```sh
 import 'react-native-gesture-handler';
 ```
 
-# Example
-
-A full working example project is here [Example](./example/src/App.tsx)
-
-```
-$ yarn
-$ yarn example ios   // For ios
-$ yarn example android   // For Android
-```
-
-## 🎬 Preview
-
-![alt Default](./assets/default.gif)
-
-| Simple         | SwipeDown Close |
-|----------------|-----------------|
-|![alt Default](./assets/simple.gif)|![alt Default](./assets/swipeDownClose.gif)|
-
-| DoubleTap Zoom | Pinch Zoom      |
-|----------------|-----------------|
-|![alt Default](./assets/doubleTap.gif)|![alt Default](./assets/pinchZoom.gif)|
+##### Know more about [react-native-reanimated](https://www.npmjs.com/package/react-native-reanimated) and [react-native-gesture-handler](https://www.npmjs.com/package/react-native-gesture-handler)
 
 ## Usage
 
 ```jsx
-import { View, Image, StyleSheet } from 'react-native';
 import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { ImagePreview } from 'react-native-images-preview';
 import { images } from './assets';
 
@@ -98,26 +98,42 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imageStyle: {
-    height: 200,
-    width: 200,
+    height: 150,
+    width: 250,
   },
 });
 ```
 
+#### 🎬 Preview
+
+![alt Default](./assets/demo.gif)
+
 ## Properties
 
-|    Props     | Default |                   Type                    |                                Description                                 |
-| :----------: | :-----: | :---------------------------------------: | :------------------------------------------------------------------------: |
-| customHeader |    -    | (close: () => void) => React.ReactElement |                      Add your custom header component                      |
-| imageSource  |    -    |            ImageSourcePropType            |                              Source of image                               |
-|  imageStyle  |    -    |           `StyleProp<ImageStyle>`           |                              Styling of image                              |
-|  imageProps  |    -    |                ImageProps                 | Provide <a href="https://reactnative.dev/docs/image#props">image</a> props |
-| doubleTapZoomEnabled |    true    | boolean |                      enable/disable double tap to zoom                     |
-| pinchZoomEnabled |    true    | boolean |                      enable/disable pinch to zoom                     |
-| swipeDownCloseEnabled |    true    | boolean |                      enable/disable swipe down to close modal                     |
+| Props                 | Default |          Type           | Description                                                                                          |
+| :-------------------- | :-----: | :---------------------: | :--------------------------------------------------------------------------------------------------- |
+| **imageSource**       |    -    |   ImageSourcePropType   | Source of image                                                                                      |
+| **imageStyle**        |    -    | `StyleProp<ImageStyle>` | Styling of image                                                                                     |
+| imageProps            |    -    |       ImageProps        | Provide <a href="https://reactnative.dev/docs/image#props"> image props </a>                         |
+| swipeDownCloseEnabled |  true   |         boolean         | Enable/Disable swipe down to close modal                                                             |
+| doubleTapZoomEnabled  |  true   |         boolean         | Enable/Disable double tap to zoom                                                                    |
+| pinchZoomEnabled      |  true   |         boolean         | Enable/Disable pinch to zoom                                                                         |
+| renderHeader          |    -    |        function         | Call back function to render custom header and provide `close()` in argument                         |
+| renderImageLoader     |    -    |        function         | Call back function to render custom image loader                                                     |
+| errorImageSource      |    -    |   ImageSourcePropType   | Source of error image                                                                                |
+| imageLoaderProps      |    -    | ActivityIndicatorProps  | Provide <a href="https://reactnative.dev/docs/activityindicator#props"> ActivityIndicator props </a> |
 
+##### Know more about [ImageProps](https://reactnative.dev/docs/image#props), [ActivityIndicatorProps](https://reactnative.dev/docs/activityindicator#props)
 
----
+## Example
+
+A full working example project is here [Example](./example/src/App.tsx)
+
+```sh
+yarn
+yarn example ios   // For ios
+yarn example android   // For Android
+```
 
 ## Find this library useful? ❤️
 

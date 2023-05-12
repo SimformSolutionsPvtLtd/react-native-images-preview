@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import Animated, {
@@ -12,15 +12,15 @@ import Animated, {
 } from 'react-native-reanimated';
 import { StaticValues } from '../../../constants';
 import { Colors } from '../../../theme';
-import type { ModalConfigType } from '../types';
+import type { UseImageModalProps } from '../types';
 
-const useImageModal = (
-  modalConfig: ModalConfigType,
-  setModalConfig: Dispatch<SetStateAction<ModalConfigType>>,
-  pinchZoomEnabled: boolean | undefined,
-  doubleTapZoomEnabled: boolean | undefined,
-  swipeDownCloseEnabled: boolean | undefined
-) => {
+const useImageModal = ({
+  modalConfig,
+  setModalConfig,
+  pinchZoomEnabled,
+  doubleTapZoomEnabled,
+  swipeDownCloseEnabled,
+}: UseImageModalProps) => {
   const { height: WINDOW_HEIGHT, width: WINDOW_WIDTH } = useWindowDimensions();
   const animatedImageRef = useAnimatedRef<Animated.Image>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -47,6 +47,9 @@ const useImageModal = (
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /**
+   * function use to close the modal
+   */
   const onPressClose = () => {
     colorOffset.value = withTiming(0);
     offset.value = withTiming(0, {}, () => {
@@ -60,44 +63,63 @@ const useImageModal = (
     });
   };
 
+  /**
+   * This function use to update translate and scale values
+   * @param newTranslateX
+   * @param newTranslateY
+   * @param newScale
+   */
   const updateTranslate = (
-    newTraslateX: number,
-    newTraslateY: number,
+    newTranslateX: number,
+    newTranslateY: number,
     newScale: number
   ) => {
     'worklet';
-    const maxTraslateX =
-      ((WINDOW_WIDTH / 2) * newScale - WINDOW_WIDTH / 2) / newScale;
-    const minTraslateX = -maxTraslateX;
+    const maxTranslateX = (WINDOW_WIDTH / 2) * newScale - WINDOW_WIDTH / 2;
+    const minTranslateX = -maxTranslateX;
 
-    const maxTraslateY =
-      ((WINDOW_HEIGHT / 2) * newScale - WINDOW_HEIGHT / 2) / newScale;
-    const minTraslateY = -maxTraslateY;
+    const maxTranslateY = (WINDOW_HEIGHT / 2) * newScale - WINDOW_HEIGHT / 2;
+    const minTranslateY = -maxTranslateY;
 
-    if (newTraslateX > maxTraslateX) {
-      translateX.value = maxTraslateX;
-    } else if (newTraslateX < minTraslateX) {
-      translateX.value = minTraslateX;
+    if (newTranslateX > maxTranslateX) {
+      translateX.value = maxTranslateX;
+    } else if (newTranslateX < minTranslateX) {
+      translateX.value = minTranslateX;
     } else {
-      translateX.value = newTraslateX;
+      translateX.value = newTranslateX;
     }
 
-    if (newTraslateY > maxTraslateY) {
-      translateY.value = maxTraslateY;
-    } else if (newTraslateY < minTraslateY) {
-      translateY.value = minTraslateY;
+    if (newTranslateY > maxTranslateY) {
+      translateY.value = maxTranslateY;
+    } else if (newTranslateY < minTranslateY) {
+      translateY.value = minTranslateY;
     } else {
-      translateY.value = newTraslateY;
+      translateY.value = newTranslateY;
     }
   };
 
+  /**
+   * This function is used to reset all position and scale values
+   */
+  const resetValues = () => {
+    'worklet';
+    scale.value = withTiming(1);
+    translateY.value = withTiming(0);
+    translateX.value = withTiming(0);
+    saveScale.value = withTiming(1);
+    oldTranslateX.value = withTiming(0);
+    oldTranslateY.value = withTiming(0);
+  };
+
+  /**
+   * Pan gesture handler use to move the image after zoom and swipe down to close modal
+   */
   const panGestureEvent = Gesture.Pan()
     .onChange(eventData => {
       if (scale.value > 1) {
-        const newTraslateX = eventData.translationX + oldTranslateX.value;
-        const newTraslateY = eventData.translationY + oldTranslateY.value;
-
-        updateTranslate(newTraslateX, newTraslateY, scale.value);
+        const newTranslateX = eventData.translationX + oldTranslateX.value;
+        const newTranslateY = eventData.translationY + oldTranslateY.value;
+        updateTranslate(newTranslateX, newTranslateY, scale.value);
       } else if (swipeDownCloseEnabled) {
         colorOffset.value -= StaticValues.colorOpacityThreshold;
         translateY.value = eventData.translationY + oldTranslateY.value;
@@ -120,17 +142,15 @@ const useImageModal = (
       oldTranslateY.value = translateY.value;
     });
 
+  /**
+   * Tap gesture handler use to double tap to zoom in/out
+   */
   const doubleTapEvent = Gesture.Tap()
     .numberOfTaps(2)
     .enabled(doubleTapZoomEnabled ?? true)
     .onEnd(eventData => {
       if (scale.value !== 1) {
-        scale.value = withTiming(1);
-        translateY.value = withTiming(0);
-        translateX.value = withTiming(0);
-        saveScale.value = withTiming(1);
-        oldTranslateX.value = withTiming(0);
-        oldTranslateY.value = withTiming(0);
+        resetValues();
       } else {
         scale.value = withTiming(2);
         saveScale.value = 2;
@@ -145,25 +165,34 @@ const useImageModal = (
       }
     });
 
+  /**
+   * Pinch gestures handler for pinch to zoom in/out
+   */
   const pinchGestureEvent = Gesture.Pinch()
     .enabled(pinchZoomEnabled ?? true)
     .onChange(eventData => {
       const updatedScale = saveScale.value * eventData.scale;
       if (updatedScale < 1) {
-        scale.value = 1;
+        resetValues();
       } else {
         scale.value = updatedScale;
-        const newTraslateX = oldTranslateX.value;
-        const newTraslateY = oldTranslateY.value;
-        updateTranslate(newTraslateX, newTraslateY, updatedScale);
+        const newTranslateX = oldTranslateX.value;
+        const newTranslateY = oldTranslateY.value;
+        updateTranslate(newTranslateX, newTranslateY, updatedScale);
       }
     })
     .onEnd(() => {
       saveScale.value = scale.value;
       oldTranslateX.value = translateX.value;
       oldTranslateY.value = translateY.value;
+      if (scale.value < 1.1) {
+        resetValues();
+      }
     });
 
+  /**
+   * Use to update scale, top and left position of image
+   */
   const animatedImageStyle = useAnimatedStyle(() => ({
     height: imageHeight.value,
     width: imageWidth.value,
@@ -172,42 +201,37 @@ const useImageModal = (
     left: oldTranslateX.value,
   }));
 
-  const modalAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: interpolateColor(
-        colorOffset.value,
-        [0, 1],
-        [Colors.transparent, Colors.black]
-      ),
-    };
-  });
+  /**
+   * Use to animate the modal background
+   */
+  const modalAnimatedStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      colorOffset.value,
+      [0, 1],
+      [Colors.transparent, Colors.black]
+    ),
+  }));
 
-  const imageAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      height: interpolate(
-        offset.value,
-        [0, 1],
-        [modalConfig.height, WINDOW_HEIGHT]
-      ),
-      width: interpolate(
-        offset.value,
-        [0, 1],
-        [modalConfig.width, WINDOW_WIDTH]
-      ),
-      top: interpolate(offset.value, [0, 1], [modalConfig.y, translateY.value]),
-      left: interpolate(
-        offset.value,
-        [0, 1],
-        [modalConfig.x, translateX.value]
-      ),
-    };
-  });
+  /**
+   * Use to animate size and position of image
+   */
+  const imageAnimatedStyle = useAnimatedStyle(() => ({
+    height: interpolate(
+      offset.value,
+      [0, 1],
+      [modalConfig.height, WINDOW_HEIGHT]
+    ),
+    width: interpolate(offset.value, [0, 1], [modalConfig.width, WINDOW_WIDTH]),
+    top: interpolate(offset.value, [0, 1], [modalConfig.y, translateY.value]),
+    left: interpolate(offset.value, [0, 1], [modalConfig.x, translateX.value]),
+  }));
 
-  const headerOpacityAnimation = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(colorOffset.value, [0, 1], [0, 1]),
-    };
-  });
+  /**
+   * Use to animate the header opacity
+   */
+  const headerOpacityAnimation = useAnimatedStyle(() => ({
+    opacity: interpolate(colorOffset.value, [0, 1], [0, 1]),
+  }));
 
   return {
     loading,

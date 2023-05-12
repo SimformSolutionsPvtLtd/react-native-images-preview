@@ -9,18 +9,18 @@ import Animated from 'react-native-reanimated';
 import { useImageModal } from '../hooks';
 import type { ImageModalProps } from '../types';
 import Header from './Header';
-import imageModalStyle from './styles/ImageModalStyle';
+import { ImageModalStyle } from './styles';
 
 const ImageModal = ({
   setModalConfig,
   modalConfig,
-  customHeader,
+  renderHeader,
   imageSource,
   doubleTapZoomEnabled,
   pinchZoomEnabled,
   swipeDownCloseEnabled,
 }: ImageModalProps) => {
-  const styles = imageModalStyle(
+  const styles = ImageModalStyle(
     modalConfig.x,
     modalConfig.y,
     modalConfig.height,
@@ -38,13 +38,14 @@ const ImageModal = ({
     doubleTapEvent,
     panGestureEvent,
     pinchGestureEvent,
-  } = useImageModal(
+  } = useImageModal({
     modalConfig,
     setModalConfig,
     pinchZoomEnabled,
     doubleTapZoomEnabled,
-    swipeDownCloseEnabled
-  );
+    swipeDownCloseEnabled,
+  });
+
   return (
     <Modal visible={modalConfig.visible} transparent>
       <GestureHandlerRootView style={styles.gestureContainer}>
@@ -56,7 +57,7 @@ const ImageModal = ({
           <Animated.View style={[styles.modalContainer, modalAnimatedStyle]}>
             <SafeAreaView style={styles.modalContainer}>
               <Header
-                {...{ customHeader, onPressClose, headerOpacityAnimation }}
+                {...{ renderHeader, onPressClose, headerOpacityAnimation }}
               />
               {loading && (
                 <ActivityIndicator style={styles.activityIndicatorStyle} />
