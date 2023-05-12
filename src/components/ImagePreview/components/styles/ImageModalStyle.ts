@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-const imageModalStyle = (x: number, y: number) =>
+const imageModalStyle = (x: number, y: number, height: number, width: number) =>
   StyleSheet.create({
     modalContainer: {
       flex: 1,
@@ -12,8 +12,8 @@ const imageModalStyle = (x: number, y: number) =>
       position: 'absolute',
       top: y,
       left: x,
-      height: '100%',
-      width: '100%',
+      height,
+      width,
     },
     activityIndicatorStyle: {
       position: 'absolute',

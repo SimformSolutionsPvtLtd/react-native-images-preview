@@ -20,7 +20,12 @@ const ImageModal = ({
   pinchZoomEnabled,
   swipeDownCloseEnabled,
 }: ImageModalProps) => {
-  const styles = imageModalStyle(modalConfig.x, modalConfig.y);
+  const styles = imageModalStyle(
+    modalConfig.x,
+    modalConfig.y,
+    modalConfig.height,
+    modalConfig.width
+  );
   const {
     imageAnimatedStyle,
     onPressClose,
@@ -61,8 +66,8 @@ const ImageModal = ({
                 source={imageSource}
                 resizeMode={'contain'}
                 style={[
-                  imageAnimatedStyle,
                   animatedImageStyle,
+                  imageAnimatedStyle,
                   styles.imageStyle,
                 ]}
                 onLoadStart={() => {

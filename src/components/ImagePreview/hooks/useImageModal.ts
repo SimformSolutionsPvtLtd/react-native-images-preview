@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import { Gesture } from 'react-native-gesture-handler';
 import Animated, {
@@ -31,11 +31,21 @@ const useImageModal = (
   const translateY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const saveScale = useSharedValue(1);
-  const oldTranslateX = useSharedValue(0);
-  const oldTranslateY = useSharedValue(0);
+  const oldTranslateX = useSharedValue(modalConfig.x);
+  const oldTranslateY = useSharedValue(modalConfig.y);
+  const imageHeight = useSharedValue(modalConfig.height);
+  const imageWidth = useSharedValue(modalConfig.width);
 
-  offset.value = withTiming(1);
-  colorOffset.value = withTiming(1);
+  useEffect(() => {
+    offset.value = withTiming(1, {}, () => {
+      oldTranslateX.value = 0;
+      oldTranslateY.value = 0;
+      imageHeight.value = WINDOW_HEIGHT;
+      imageWidth.value = WINDOW_WIDTH;
+    });
+    colorOffset.value = withTiming(1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onPressClose = () => {
     colorOffset.value = withTiming(0);
@@ -155,9 +165,11 @@ const useImageModal = (
     });
 
   const animatedImageStyle = useAnimatedStyle(() => ({
+    height: imageHeight.value,
+    width: imageWidth.value,
     transform: [{ scale: scale.value }],
-    top: translateY.value,
-    left: translateX.value,
+    top: oldTranslateY.value,
+    left: oldTranslateX.value,
   }));
 
   const modalAnimatedStyle = useAnimatedStyle(() => {
