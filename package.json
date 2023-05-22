@@ -1,7 +1,7 @@
 {
   "name": "react-native-images-preview",
   "version": "0.0.1",
-  "description": "A React Native component that allows user to preview the image and image carousel in full screen.",
+  "description": "A React Native animated custom images preview component.",
   "main": "lib/index",
   "types": "lib/index.d.ts",
   "contributors": [],
@@ -15,7 +15,12 @@
     "react",
     "react-native",
     "typescript",
-    "rn"
+    "rn",
+    "images-preview",
+    "images",
+    "preview",
+    "component",
+    "reanimated"
   ],
   "license": "MIT",
   "files": [
