@@ -1,7 +1,11 @@
 import React from 'react';
-import { Image, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+import {
+  Image,
+  TouchableOpacity,
+  type TouchableOpacityProps,
+} from 'react-native';
 import { images } from '../assets';
-import styles from './styles/ModalHeaderStyle';
+import { ModalHeaderStyle as styles } from './styles';
 
 const ModalHeader = (props: TouchableOpacityProps) => {
   return (

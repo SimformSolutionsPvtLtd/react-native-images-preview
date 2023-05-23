@@ -12,7 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { StaticValues } from '../../../constants';
 import { Colors } from '../../../theme';
-import type { UseImageModalProps } from '../types';
+import type { UseImageModalProps } from '../Types';
 
 const useImageModal = ({
   modalConfig,

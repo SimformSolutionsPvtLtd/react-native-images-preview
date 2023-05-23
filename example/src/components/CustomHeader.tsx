@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import styles from './styles/CustomHeaderStyle';
-import type { CustomHeaderType } from './types';
+import { CustomHeaderStyle as styles } from './styles';
+import type { CustomHeaderType } from './Types';
 
 const CustomHeader = ({ title }: CustomHeaderType) => {
   return (

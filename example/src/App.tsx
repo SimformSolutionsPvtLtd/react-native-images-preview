@@ -9,7 +9,7 @@ import { applicationStyle } from './theme';
 const {
   screen,
   scrollViewStyle,
-  text,
+  textStyle,
   imageStyle,
   horizontalView,
   customImageStyle,
@@ -20,16 +20,16 @@ const App = () => {
     <SafeAreaView style={screen}>
       <CustomHeader title={Strings.home} />
       <ScrollView style={scrollViewStyle} showsVerticalScrollIndicator={false}>
-        <Text style={text}>{Strings.dummyText}</Text>
+        <Text style={textStyle}>{Strings.dummyText}</Text>
         <ImagePreview imageSource={images.forest} imageStyle={imageStyle} />
-        <Text style={text}>{Strings.dummyText}</Text>
+        <Text style={textStyle}>{Strings.dummyText}</Text>
         <ImagePreview
           imageSource={{
             uri: imageData.image1,
           }}
           imageStyle={imageStyle}
         />
-        <Text style={text}>{Strings.dummyText}</Text>
+        <Text style={textStyle}>{Strings.dummyText}</Text>
         <View style={horizontalView}>
           <ImagePreview
             renderHeader={onPressClose => (

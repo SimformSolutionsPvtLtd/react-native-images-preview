@@ -7,7 +7,7 @@ import {
 } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import { useImageModal } from '../hooks';
-import type { ImageModalProps } from '../types';
+import type { ImageModalProps } from '../Types';
 import Header from './Header';
 import { ImageModalStyle } from './styles';
 

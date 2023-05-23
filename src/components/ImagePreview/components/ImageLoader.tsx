@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
-import type { ImageLoaderProps } from '../types';
+import type { ImageLoaderProps } from '../Types';
 import { ImageLoaderStyle as styles } from './styles';
 
 const ImageLoader = ({ renderImageLoader, ...rest }: ImageLoaderProps) => {

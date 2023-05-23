@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { Strings } from '../../../constants';
-import type { HeaderProps } from '../types';
+import type { HeaderProps } from '../Types';
 import { HeaderStyle as styles } from './styles';
 
 const Header = ({

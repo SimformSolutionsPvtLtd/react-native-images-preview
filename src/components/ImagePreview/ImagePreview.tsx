@@ -3,8 +3,8 @@ import { Image, TouchableOpacity, View } from 'react-native';
 import { images } from '../../assets';
 import { ErrorImage, ImageLoader, ImageModal } from './components';
 import { useImagePreview } from './hooks';
-import styles from './styles';
-import type { ImagePreviewProps } from './types';
+import styles from './Styles';
+import type { ImagePreviewProps } from './Types';
 
 const ImagePreview = ({
   imageSource,
