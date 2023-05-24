@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import type { Image } from 'react-native';
-import type { ModalConfigType } from '../types';
+import type { ModalConfigType } from '../Types';
 
 const useImagePreview = () => {
   const [modalConfig, setModalConfig] = useState<ModalConfigType>({

@@ -12,7 +12,7 @@ const applicationStyle = StyleSheet.create({
     height: verticalScale(200),
     width: '100%',
   },
-  text: {
+  textStyle: {
     color: Colors.black,
     fontSize: moderateScale(18),
     marginVertical: verticalScale(10),

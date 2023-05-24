@@ -1,4 +1,4 @@
-![ImagesPreview - Simform](./assets/reactNativeImagesPreview.gif)
+![ImagesPreview - Simform](./assets/reactNativeImagePreview.gif)
 
 # react-native-images-preview
 
